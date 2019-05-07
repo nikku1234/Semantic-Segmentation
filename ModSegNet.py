@@ -1,21 +1,19 @@
-import torch
+import torch 
 import torch.nn as nn
-import torch.nn.functional as F
+import torch.functional as F
 
-
-class ModSegNet(nn.Module):
-    """ModSegNet: Inspired from SegNet with small improvements
+class ModSegnet(nn.Module):
+     """ModSegNet: Inspired from SegNet with small improvements
     Args:
         num_classes (int): number of classes to segment
         n_init_features (int): number of input features in the fist convolution
         drop_rate (float): dropout rate of the last two encoders
-        filter_config (list of 5 ints): number of output features at each level
+        filter_config (list of 5 ints): number of output features at each level 32->64->128->256
     """
-    def __init__(self, num_classes, n_init_features=3, drop_rate=0.5,
-                 filter_config=(32, 64, 128, 256)):
-        super(ModSegNet, self).__init__()
+    def __init__(self, num_classes,n_init_features=3, drop_rate = 0.5,filter_config=(32,64,128,256)):
+        super(ModSegnet,self).__init__()
 
-        self.encoder1 = _Encoder(n_init_features, filter_config[0])
+        self.encoder1 = Encoder(n_init_features, filter_config(0))
         self.encoder2 = _Encoder(filter_config[0], filter_config[1])
         self.encoder3 = _Encoder(filter_config[1], filter_config[2], drop_rate)
         self.encoder4 = _Encoder(filter_config[2], filter_config[3], drop_rate)
@@ -65,46 +63,45 @@ class ModSegNet(nn.Module):
         return self.classifier(feat_decoder)
 
 
-class _Encoder(nn.Module):
+class Encoder(nn.Module):
     """Encoder layer encodes the features along the contracting path (left side).
     Args:
-        n_in_feat (int): number of input features
-        n_out_feat (int): number of output features
+        num_input_features (int): number of input features
+        num_output_features (int): number of output features
         drop_rate (float): dropout rate at the end of the block
     """
-    def __init__(self, n_in_feat, n_out_feat, drop_rate=0):
-        super(_Encoder, self).__init__()
+    def __init__(self,num_input_features,num_output_features,drop_rate=0):
+        super(Encoder,self).__init__()
 
-        layers = [nn.Conv2d(n_in_feat, n_out_feat, 3, 1, 1),
-                  nn.ReLU(inplace=True),
-                  nn.Conv2d(n_out_feat, n_out_feat, 3, 1, 1),
-                  nn.ReLU(inplace=True)]
+        layers = [nn.Conv2d(in_channels=num_input_features,out_channels=num_output_features,kernel_size=3,stride=1,1),
+                    nn.ReLU(inplace=True),
+                    nn.Conv2d(in_channels=num_output_features,out_channels=num_output_features,kernel_size=3,stride=1,1),
+                    nn.ReLU(inplace=True)]
 
-        if drop_rate > 0:
-            layers += [nn.Dropout(drop_rate)]
-
+        if drop_rate > 0 :
+            layers = layers + [nn.Dropout(drop_rate)]
+        
         self.features = nn.Sequential(*layers)
-
-    def forward(self, x):
+    
+    def forward(self,x):
         return self.features(x)
 
-
-class _Decoder(nn.Module):
+class Decoder(nn.Module):
     """Decoder layer decodes the features by performing deconvolutions and
     concatenating the resulting features with cropped features from the
     corresponding encoder (skip-connections). Encoder features are cropped
     because convolution operations does not allow to recover the same
     resolution in the expansive path.
     Args:
-        n_in_feat (int): number of input features
-        n_out_feat (int): number of output features
+        num_input_features (int): number of input features
+        num_output_features (int): number of output features
     """
-    def __init__(self, n_in_feat, n_out_feat):
-        super(_Decoder, self).__init__()
+    def __init__(self,num_input_features,num_out_features):
+        super(Decoder,self).__init__
 
-        self.encoder = _Encoder(n_in_feat * 2, n_out_feat)
-
-    def forward(self, x, feat_encoder, indices, size):
+        self.encoder = Encoder(num_input_features*2, num_output_features)
+    
+    def forward(self,x,feat_encoder, indices, size):
         unpooled = F.max_unpool2d(x, indices, 2, 2, 0, size)
         feat = torch.cat([unpooled, feat_encoder], 1)
         feat = self.encoder(feat)
