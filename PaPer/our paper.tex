@@ -125,13 +125,11 @@ The main contributions of the work include:
      \item Unlike other works, we use preprocessing and post processing steps to improve the accuracy of the model. CLAHE is used to enhance the contrast of the input mammogram images and Dense CRF is used to recover the mass boundaries which got smoother due to the rigorous downsampling.
 \end{enumerate}
 
-
-
-
-
 \section{II Method }
-
-\paragraph{Installation} If the document class \emph{elsarticle} is not available on your computer, you can download and install the system package \emph{texlive-publishers} (Linux) or install the \LaTeX\ package \emph{elsarticle} using the package manager of your \TeX\ installation, which is typically \TeX\ Live or Mik\TeX.
+\begin{enumerate}
+\item Overview
+The proposed model employs an end-to-end framework for mass segmentation in mammograms.  The input images are processed through Contrast limited Adaptive histogram equalization technique (CLAHE).  The resulting images are then normalized and resized to 256*256 to train Deep Supervised U-net. During the testing phase, resulting softmax probabilities of DS U-net are further refined using Dense CRF for  definite edges. Fig 2 shows the various components involved in the proposed work.
+\end{enumerate}
 
 \paragraph{Usage} Once the package is properly installed, you can use the document class \emph{elsarticle} to create a manuscript. Please make sure that your manuscript follows the guidelines in the Guide for Authors of the relevant journal. It is not necessary to typeset your manuscript in exactly the same way as an article, unless you are submitting to a camera-ready copy (CRC) journal.
 
