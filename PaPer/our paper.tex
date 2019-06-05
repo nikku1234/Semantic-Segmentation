@@ -127,10 +127,19 @@ The main contributions of the work include:
 
 \section{II Method }
 \begin{enumerate}
-\item Overview
+\item \textbf {Overview} \newline
 The proposed model employs an end-to-end framework for mass segmentation in mammograms.  The input images are processed through Contrast limited Adaptive histogram equalization technique (CLAHE).  The resulting images are then normalized and resized to 256*256 to train Deep Supervised U-net. During the testing phase, resulting softmax probabilities of DS U-net are further refined using Dense CRF for  definite edges. Fig 2 shows the various components involved in the proposed work.
 
-\item Preprocessing is often neglected when deep neural networks are used for segmentation. But, mammogram images exhibit high SNR and hence the detection becomes infeasible without proper preprocessing. Histogram equalization and its variants are found to be efficient for mammogram images[10][11]. Hence, CLAHE has been adopted to improve the local contrast of the image. The algorithm is also found to improve the edge boundaries in each region of the image. Fig 3 shows the sample images from INBREAST and CBIS-DDSM which are enhanced using CLAHE.
+\item \textbf {Preprocessing} \newline
+Preprocessing is often neglected when deep neural networks are used for segmentation. But, mammogram images exhibit high SNR and hence the detection becomes infeasible without proper preprocessing. Histogram equalization and its variants are found to be efficient for mammogram images[10][11]. Hence, CLAHE has been adopted to improve the local contrast of the image. The algorithm is also found to improve the edge boundaries in each region of the image. Fig 3 shows the sample images from INBREAST and CBIS-DDSM which are enhanced using CLAHE.
+
+\item \textbf {Deep Supervised U-net} \newline
+Deep Supervised nets [6][7] brings in transparency to the intermediate hidden layers in deep neural networks by considering their error factor with respect to the ground truth in the training objective criterion. It has improved robustness of the neural networks in both segmentation and classification[6]. In segmentation, the output of intermediate layers are upsampled and compared with ground truth to quantize their error margin.  U-net[9] has become the de-facto standard for biomedical image segmentation. It employs an encoder decoder based architecture. Encoder consists of convolution layers for retrieving contextual information and pooling layers to downsample the images. Downsampling facilitates retrieval of higher level contextual information. Unet has symmetrical decoder path which upsamples the information to get the spatial context of the retrieved information. Skip connections are pathways which carry the spatial information from encoder to decoder pathway. Many works have further improved U-net by varying upsampling techniques , using mixed pooling techniques (or) modifying the loss functions. Due to the symmetricity of the encoder and decoder , Unet always produces smoother segmentation map. Hence, DS U-net is used to obtain finer boundaries and eliminate the false positives. The proposed work has extended over the idea of Chen et al[8] and Mishra et al[9] to use different intermediate layers of segmentation network to focus on the boundaries and regions simultaneously. Fig 4 shows the complete architecture of the DS U-net.
+
+\begin{figure}[t]
+\includegraphics[width=\textwidth]{fig2_JPG}
+\centering
+\end{figure}
 
 \end{enumerate}
 
