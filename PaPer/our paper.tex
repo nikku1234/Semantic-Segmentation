@@ -111,12 +111,25 @@ Mass detection is a critical process in the review of mammograms. The shape and 
 
 \linenumbers
 
-\section{Introduction}
+\section{I Introduction }
 
 Global Cancer Observatory Database released in 2018 reports that Breast cancer is contributing to over 25.4\% of all the new cases diagnosed \citep{}[1].  Henceforth, Governments are conducting screening programmes to curb the disease. Mammograms are widely adopted as  the primary screening tool to diagnose breast cancer. A mammogram is an x-ray image of the breast which captures the changes in the breast tissue. Presence of masses and microcalcifications in the mammogram characterize the disease. The detection of these regions in mammograms are difficult as their pixel intensities often correlate with normal tissue. 
 
 CAD (computer aided detection) tools uses digitally captured images of the mammogram and employs artificial intelligence based techniques to detect suspicious regions in them. CAD has been constantly evolving with the advent of new techniques in the domain to provide accurate results. With the recent success of deep neural networks in most of the vision oriented challenges, they are been explored for medical diagnosis. 
 
+The main contributions of the work include:
+\begin{enumerate}
+   \item We propose Deep Supervised U-net for mass segmentation in whole mammograms to monitor the attention of the intermediate layers.  Encoder layers are directed towards proper attention of the mass boundaries and decoder layers are directed towards proper attention of the mass regions. This reduces false positives and leads to faster convergence.
+   \item We use a learnable fusion layer to fuse the output of the attention layers with the last layer to produce the final segmentation result.
+   \item We employ Combined loss function for the fusion layer to address the class imbalance problems (mass usually occupies a smaller percentage of the entire image). This loss penalizes the false positives more.
+     \item Unlike other works, we use preprocessing and post processing steps to improve the accuracy of the model. CLAHE is used to enhance the contrast of the input mammogram images and Dense CRF is used to recover the mass boundaries which got smoother due to the rigorous downsampling.
+\end{enumerate}
+
+
+
+
+
+\section{II Method }
 
 \paragraph{Installation} If the document class \emph{elsarticle} is not available on your computer, you can download and install the system package \emph{texlive-publishers} (Linux) or install the \LaTeX\ package \emph{elsarticle} using the package manager of your \TeX\ installation, which is typically \TeX\ Live or Mik\TeX.
 
